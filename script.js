@@ -1,52 +1,85 @@
 function validateRegister() {
-  const name = document.getElementById("reg-name").value;
+  const fname = document.getElementById("reg-fname").value;
+  const mi = document.getElementById("reg-mi").value;
+  const lname = document.getElementById("reg-lname").value;
   const email = document.getElementById("reg-email").value;
-  const user = document.getElementById("reg-name").value; // Using name as username for simplicity
   const pass = document.getElementById("reg-pass").value;
+  const confirmPass = document.getElementById("reg-confirm-pass").value;
   const error = document.getElementById("register-error");
 
-  if (name === "" || email === "" || pass === "") {
-    error.innerText = "All fields are required!";
+  // Basic validation for required fields
+  if (
+    fname === "" ||
+    lname === "" ||
+    email === "" ||
+    pass === "" ||
+    confirmPass === ""
+  ) {
+    error.innerText = "Please fill in all required fields.";
     error.style.display = "block";
-  } else if (!email.includes("@")) {
+    return;
+  }
+
+  // Email format validation
+  if (!email.includes("@")) {
     error.innerText = "Please enter a valid email.";
     error.style.display = "block";
-  } else {
-    error.style.display = "none";
-
-    // Save credentials to localStorage
-    localStorage.setItem("storedUser", name);
-    localStorage.setItem("storedPass", pass);
-
-    alert("Account created successfully! You can now login.");
-    showPage("login");
+    return;
   }
+
+  // Password match validation
+  if (pass !== confirmPass) {
+    error.innerText = "Passwords do not match!";
+    error.style.display = "block";
+    return;
+  }
+
+  // Unique email validation using localStorage
+  const existingUser = localStorage.getItem(email);
+  if (existingUser) {
+    error.innerText = "An account with this email already exists.";
+    error.style.display = "block";
+    return;
+  }
+
+  // Save user data (storing as an object string)
+  const fullName = mi ? `${fname} ${mi}. ${lname}` : `${fname} ${lname}`;
+  const userData = {
+    name: fullName,
+    password: pass,
+  };
+
+  localStorage.setItem(email, JSON.stringify(userData));
+
+  error.style.display = "none";
+  alert("Account created successfully! Use your email to login.");
+  showPage("login");
 }
 
 function validateLogin() {
-  const userInput = document.getElementById("login-user").value;
+  const emailInput = document.getElementById("login-user").value; // Use email as login ID
   const passInput = document.getElementById("login-pass").value;
   const error = document.getElementById("login-error");
 
-  // Retrieve stored credentials
-  const storedUser = localStorage.getItem("storedUser");
-  const storedPass = localStorage.getItem("storedPass");
+  // Retrieve stored user data
+  const storedData = localStorage.getItem(emailInput);
 
-  if (userInput === "" || passInput === "") {
-    error.innerText = "Please enter both username and password.";
+  if (!storedData) {
+    error.innerText = "No account found with this email.";
     error.style.display = "block";
-  } else if (userInput === storedUser && passInput === storedPass) {
-    // Success: Match found
-    error.style.display = "none";
+    return;
+  }
 
+  const user = JSON.parse(storedData);
+
+  if (passInput === user.password) {
+    error.style.display = "none";
     document.getElementById("guest-links").style.display = "none";
     document.getElementById("user-dropdown").style.display = "inline-block";
-    document.getElementById("display-username").innerText = userInput + " ▼";
-
+    document.getElementById("display-username").innerText = user.name + " ▼";
     showSection("home");
   } else {
-    // Failure: No match
-    error.innerText = "Invalid username or password.";
+    error.innerText = "Incorrect password.";
     error.style.display = "block";
   }
 }
