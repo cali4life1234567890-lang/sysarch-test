@@ -183,8 +183,8 @@ span {
   align-items: center;
 }
 
-.nav-links a, 
-.nav-links span a, 
+.nav-links a,
+.nav-links span a,
 .dropbtn {
   margin: 0 15px;
   text-decoration: none;
@@ -195,8 +195,8 @@ span {
   display: inline-block;
 }
 
-.nav-links a:hover, 
-.nav-links span a:hover, 
+.nav-links a:hover,
+.nav-links span a:hover,
 .dropbtn:hover {
   color: #0a2e5a; /* Slightly darkens the blue */
   transform: scale(1.1); /* Makes the text slightly larger */
