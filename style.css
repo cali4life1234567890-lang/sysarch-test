@@ -1,15 +1,35 @@
 .navbar {
   display: flex;
-  justify-content: space-between; /* pushes items left & right */
+  justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* padding inside navbar */
+  padding: 10px 30px;
   background-color: #ffffff;
-  border-bottom: 2px solid #144d94;
+  border-bottom: 3px solid #144d94;
 }
 
-.logo {
-  height: 50px;
-  padding: 5px; /* padding around the logo */
+.logo-group {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 15px;
+}
+
+.logo-main {
+  width: 120px;
+  height: auto;
+}
+
+.logo-sub {
+  width: 80px;
+  height: auto;
+}
+
+.system-title {
+  color: #144d94;
+  font-size: 22px;
+  font-weight: 550;
+  margin: 0;
+  font-family: Arial, sans-serif;
 }
 
 body {
@@ -35,6 +55,16 @@ body {
   border-radius: 4px;
 }
 
+.auth-input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
 .btn-primary {
   background-color: #144d94;
   color: white;
@@ -52,14 +82,94 @@ body {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 15px;
-  display: none; /* Hidden by default */
+  display: none;
   font-size: 14px;
+}
+
+.profile-card {
+  background: white;
+  width: 90%;
+  max-width: 650px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: left;
+  color: #333;
+}
+
+.profile-layout {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.profile-pic {
+  width: 160px;
+  height: 160px;
+  object-fit: cover;
+}
+
+.profile-right {
+  flex-grow: 1;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 15px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.label {
+  font-weight: bold;
+  width: 180px;
+  flex-shrink: 0;
+}
+
+.value {
+  color: #555;
+  word-break: break-word;
+}
+
+.profile-footer {
+  margin-top: 30px;
+}
+
+.edit-btn {
+  display: inline-block;
+  color: #144d94;
+  text-decoration: none;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.delete-btn {
+  display: block;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #c9302c;
 }
 
 span {
   color: #144d94;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .content-section {
@@ -68,13 +178,30 @@ span {
   color: #333;
 }
 
-.nav-links a {
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a, 
+.nav-links span a, 
+.dropbtn {
   margin: 0 15px;
   text-decoration: none;
   color: #144d94;
   font-weight: bold;
-  cursor: pointer;
+  font-size: 20px;
+  transition: all 0.2s ease-in-out; /* Smooth transition */
+  display: inline-block;
 }
+
+.nav-links a:hover, 
+.nav-links span a:hover, 
+.dropbtn:hover {
+  color: #0a2e5a; /* Slightly darkens the blue */
+  transform: scale(1.1); /* Makes the text slightly larger */
+}
+
 .dropdown {
   position: relative;
   display: inline-block;
@@ -83,9 +210,8 @@ span {
 .dropbtn {
   background: none;
   border: none;
-  color: #144d94;
-  font-weight: bold;
   cursor: pointer;
+  padding: 0;
 }
 
 .dropdown-content {

@@ -1,71 +1,73 @@
+let currentLoggedInId = null;
+
 function validateRegister() {
-  const fname = document.getElementById("reg-fname").value;
-  const mi = document.getElementById("reg-mi").value;
+  const idNum = document.getElementById("reg-id").value;
   const lname = document.getElementById("reg-lname").value;
-  const email = document.getElementById("reg-email").value;
+  const fname = document.getElementById("reg-fname").value;
+  const mname = document.getElementById("reg-mname").value;
+  const level = document.getElementById("reg-level").value;
   const pass = document.getElementById("reg-pass").value;
   const confirmPass = document.getElementById("reg-confirm-pass").value;
+  const email = document.getElementById("reg-email").value;
+  const course = document.getElementById("reg-course").value;
+  const address = document.getElementById("reg-address").value;
   const error = document.getElementById("register-error");
 
-  // Basic validation for required fields
   if (
-    fname === "" ||
-    lname === "" ||
-    email === "" ||
-    pass === "" ||
-    confirmPass === ""
+    !idNum ||
+    !lname ||
+    !fname ||
+    !mname ||
+    !level ||
+    !pass ||
+    !confirmPass ||
+    !email ||
+    !course ||
+    !address
   ) {
-    error.innerText = "Please fill in all required fields.";
+    error.innerText = "Please fill in all fields.";
     error.style.display = "block";
     return;
   }
 
-  // Email format validation
-  if (!email.includes("@")) {
-    error.innerText = "Please enter a valid email.";
-    error.style.display = "block";
-    return;
-  }
-
-  // Password match validation
   if (pass !== confirmPass) {
     error.innerText = "Passwords do not match!";
     error.style.display = "block";
     return;
   }
 
-  // Unique email validation using localStorage
-  const existingUser = localStorage.getItem(email);
-  if (existingUser) {
-    error.innerText = "An account with this email already exists.";
+  if (localStorage.getItem(idNum)) {
+    error.innerText = "An account with this ID Number already exists.";
     error.style.display = "block";
     return;
   }
 
-  // Save user data (storing as an object string)
-  const fullName = mi ? `${fname} ${mi}. ${lname}` : `${fname} ${lname}`;
   const userData = {
-    name: fullName,
+    id: idNum,
+    firstName: fname,
+    name: `${fname} ${mname} ${lname}`,
     password: pass,
+    email: email,
+    level: level,
+    course: course,
+    address: address,
   };
 
-  localStorage.setItem(email, JSON.stringify(userData));
+  localStorage.setItem(idNum, JSON.stringify(userData));
 
   error.style.display = "none";
-  alert("Account created successfully! Use your email to login.");
+  alert("Account created successfully!");
   showPage("login");
 }
 
 function validateLogin() {
-  const emailInput = document.getElementById("login-user").value; // Use email as login ID
+  const idInput = document.getElementById("login-id").value;
   const passInput = document.getElementById("login-pass").value;
   const error = document.getElementById("login-error");
-
-  // Retrieve stored user data
-  const storedData = localStorage.getItem(emailInput);
+  const storedData = localStorage.getItem(idInput);
 
   if (!storedData) {
-    error.innerText = "No account found with this email.";
+    error.innerText = "No account found with this ID Number.";
     error.style.display = "block";
     return;
   }
@@ -73,6 +75,7 @@ function validateLogin() {
   const user = JSON.parse(storedData);
 
   if (passInput === user.password) {
+    currentLoggedInId = idInput;
     error.style.display = "none";
     document.getElementById("guest-links").style.display = "none";
     document.getElementById("user-dropdown").style.display = "inline-block";
@@ -83,52 +86,64 @@ function validateLogin() {
     error.style.display = "block";
   }
 }
-function showSection(sectionId) {
-  // Hide the auth container
-  document.getElementById("auth-container").style.display = "none";
 
-  // Hide all content sections
+function showSection(sectionId) {
+  document.getElementById("auth-container").style.display = "none";
   const sections = document.querySelectorAll(".content-section");
   sections.forEach((section) => {
     section.style.display = "none";
   });
-
-  // Show the specific content section
   const targetSection = document.getElementById(sectionId);
   if (targetSection) {
     targetSection.style.display = "block";
   }
 }
 function showPage(pageId) {
-  // Hide all main content sections
   const sections = document.querySelectorAll(".content-section");
   sections.forEach((section) => {
     section.style.display = "none";
   });
-
-  // Make the parent container visible
   const authContainer = document.getElementById("auth-container");
   authContainer.style.display = "block";
-
-  // Hide both sub-pages first
   document.getElementById("login-page").style.display = "none";
   document.getElementById("register-page").style.display = "none";
-
-  // Show the specific sub-page requested
   const targetPage = document.getElementById(pageId + "-page");
   if (targetPage) {
     targetPage.style.display = "block";
   }
 }
 
+function showProfile() {
+  if (!currentLoggedInId) return;
+
+  const user = JSON.parse(localStorage.getItem(currentLoggedInId));
+
+  document.getElementById("prof-id").innerText = user.id;
+  document.getElementById("prof-name").innerText = user.name;
+  document.getElementById("prof-course-level").innerText =
+    `${user.course} - ${user.level}`;
+  document.getElementById("prof-email").innerText = user.email;
+  document.getElementById("prof-address").innerText = user.address;
+
+  showSection("profile");
+}
+
+function deleteAccount() {
+  if (
+    confirm(
+      "Are you sure you want to delete your account? This cannot be undone.",
+    )
+  ) {
+    localStorage.removeItem(currentLoggedInId);
+    alert("Account deleted.");
+    logout();
+  }
+}
+
 function logout() {
-  // Revert UI to Guest state
   document.getElementById("guest-links").style.display = "inline";
   document.getElementById("user-dropdown").style.display = "none";
-
-  // Clear inputs
-  document.getElementById("login-user").value = "";
+  document.getElementById("login-id").value = "";
   document.getElementById("login-pass").value = "";
-
   showSection("home");
 }
