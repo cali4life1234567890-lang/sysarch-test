@@ -75,7 +75,7 @@ function validateLogin() {
   const user = JSON.parse(storedData);
 
   if (passInput === user.password) {
-    currentLoggedInId = idInput;
+    currentLoggedInId = idInput; 
     error.style.display = "none";
     document.getElementById("guest-links").style.display = "none";
     document.getElementById("user-dropdown").style.display = "inline-block";
